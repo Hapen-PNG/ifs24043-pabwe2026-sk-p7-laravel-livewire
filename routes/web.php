@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['throttle:1000-per-second'])->group(function () {
-    // Root Redirection
+    // Public landing page; signed-in users go straight to their workspace.
     Route::get('/', function () {
         if (Auth::check()) {
             return Auth::user()->isAdmin()
@@ -20,8 +20,8 @@ Route::middleware(['throttle:1000-per-second'])->group(function () {
                 : redirect()->route('stocks.index');
         }
 
-        return redirect()->route('login');
-    });
+        return view('home');
+    })->name('home');
 
     // Guest Authentication Routes
     Route::middleware('guest')->group(function () {

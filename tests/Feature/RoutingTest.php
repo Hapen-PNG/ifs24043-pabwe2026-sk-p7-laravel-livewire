@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Features\Stock\Models\Stock;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -10,10 +11,19 @@ class RoutingTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_root_redirects_guest_to_login(): void
+    public function test_root_renders_public_landing_page_for_guest(): void
     {
         $this->get('/')
-            ->assertRedirect(route('login'));
+            ->assertOk()
+            ->assertSee('Manajemen Stok Barang')
+            ->assertSee(route('login'))
+            ->assertSee(route('register'));
+    }
+
+    public function test_login_and_register_are_accessible_to_guests(): void
+    {
+        $this->get('/login')->assertOk();
+        $this->get('/register')->assertOk();
     }
 
     public function test_root_redirects_member_to_stocks(): void
@@ -38,5 +48,19 @@ class RoutingTest extends TestCase
     {
         $this->get('/up')
             ->assertStatus(200);
+    }
+
+    public function test_member_can_access_protected_stock_and_profile_pages(): void
+    {
+        $member = User::factory()->member()->create();
+        $stock = Stock::factory()->create([
+            'user_id' => $member->id,
+        ]);
+
+        $this->actingAs($member);
+
+        $this->get('/stocks')->assertOk();
+        $this->get('/profile')->assertOk();
+        $this->get(route('stocks.show', $stock))->assertOk();
     }
 }

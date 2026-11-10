@@ -149,8 +149,8 @@ app/
    ```
 
    Akun bawaan seeder:
-   - **Admin**: `admin` / `password` (Email: `admin@stockapp.local`)
-   - **Member**: `member` / `password` (Email: `member@stockapp.local`)
+   - **Admin**: `admin` / `admin` (Email: `admin@example.com`)
+   - **Member**: `member` / `member` (Email: `member@example.com`)
 
 4. **Jalankan Aplikasi:**
    ```bash
